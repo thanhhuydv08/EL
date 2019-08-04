@@ -3,3 +3,129 @@
  các application, sesion, request, pagecontent
 2- vd : jsp : 3+8 =<%=3+8%>
         el : 3+8 =${3+8}
+        
+riêng khai báo biến -> muốn lấy đuwocj phải khởi tạo môi trường web aplication.set.....(); request.set....session.set....pageconext.set...
+trong jsp : <%! int a =5%>
+
+=> muốn lấy hiển thị ra ngoài web bắt buộc : <%! int a =5    request.setAtribute("a",a)%>
+                                             và ta chỉ việc lấy nó ra a=${a}
+     
+   =============== cách lấy dữ liệu khai báo các biến đơn, list, map, đối tượng (bắt buộc phải javabean).....==============
+      1> Biến đơn :  khai báo kiểu jsp và thêm thuộc tính môi trường web -> muốn in ra thì biến =${};
+                             int a=5;
+                             application.setAttribute("a", a);
+                      =>     a = ${a} 
+                      => note : nếu ko có dòng application.setAttribute("a", a); thì sẽ ko thực thi được
+                      
+      2> Biến Mảng :        int[] m = {1,5,2,3,4};
+                             request.setAttribute("m", m);
+                       =>    m[1] = ${m[1]}
+                      
+       3> Biến List :      List<String> ds = Arrays.asList("mai","lan","cuc","truc");
+                             session.setAttribute("ds", ds);
+                        =>    ds[1] = <%=ds.get(1) %><br> // jsp
+                            ds[1] = ${ds[1]}<br> //el
+====> như vậy muốn lấy đối tượng và tham số param thì không cần thiết lập môi tr\ường web
+        4> Đối tượng  : bắt buộc phải là javaBean - 
+                     ==>Tên sữa: <%=ls.getTenLoai() %><br>
+                            Tên sữa: ${ls.tenLoai}<br>
+                       vd : package javaBean;
+
+                            import java.io.Serializable;
+
+                            /*
+                             * Java bean la lop java don gian thoa 4 yeu cau
+                             * 1. thuc thi giao tiep Serializable
+                             * 2. cac thanh phan du lieu private
+                             * 3. co cac phuong thuc getter va setter
+                             * 4. co mot phuong thuc khoi tao khong tham so
+                             */
+                            public class LoaiSua implements Serializable{
+                             private String maLoai;
+                             private String tenLoai;
+                             public String getMaLoai() {
+                              return maLoai;
+                             }
+                             public void setMaLoai(String maLoai) {
+                              this.maLoai = maLoai;
+                             }
+                             public String getTenLoai() {
+                              return tenLoai;
+                             }
+                             public void setTenLoai(String tenLoai) {
+                              this.tenLoai = tenLoai;
+                             }
+                             public LoaiSua() {
+                              super();
+                             }
+                            }
+         6> tham số parameter tren web : cách truyền ?ten=Huy&tuoi=29&phai=nam
+                      => Người dùng: <%=request.getParameter("ten") %><br>
+                            Người dùng: ${param.ten}
+                             
+   vd :
+                             <%@page import="javaBean.LoaiSua"%>
+                            <%@page import="java.util.TreeMap"%>
+                            <%@page import="java.util.Map"%>
+                            <%@page import="java.util.Arrays"%>
+                            <%@page import="java.util.List"%>
+                            <%@ page language="java" contentType="text/html; charset=UTF-8"
+                                pageEncoding="UTF-8"%>
+                            <!DOCTYPE html>
+                            <html>
+                            <head>
+                            <meta charset="UTF-8">
+                            <title>Minh hoạ EL</title>
+                            <%
+                             //bien don
+                             int a=5;
+                             application.setAttribute("a", a);
+
+                             //bien mang
+                             int[] m = {1,5,2,3,4};
+                             request.setAttribute("m", m);
+
+                             //list
+                             List<String> ds = Arrays.asList("mai","lan","cuc","truc");
+                             session.setAttribute("ds", ds);
+
+                             //map
+                             Map<String,String> td = new TreeMap<>();
+                             td.put("one", "một");
+                             td.put("five", "năm");
+                             td.put("four", "bốn");
+                             td.put("three", "ba");
+                             pageContext.setAttribute("td", td);
+
+                             //java bean
+                             LoaiSua ls = new LoaiSua();
+                             ls.setMaLoai("AA");
+                             ls.setTenLoai("Sữa AAAA");
+                             request.setAttribute("ls", ls);
+                            %>
+                            </head>
+                            <body>
+                            3+8 = <%=3+8%><br>
+                            3+8 = ${3+8}<br>
+
+                            a = <%=a%><br>
+                            a = ${a}<br>
+
+                            m[1] = <%=m[1]%><br>
+                            m[1] = ${m[1]}<br>
+
+                            ds[1] = <%=ds.get(1) %><br>
+                            ds[1] = ${ds[1]}<br>
+
+                            td["five"] = <%=td.get("five") %><br>
+                            td["five"] = ${td["five"]}<br>
+
+                            Tên sữa: <%=ls.getTenLoai() %><br>
+                            Tên sữa: ${ls.tenLoai}<br>
+
+                            Người dùng: <%=request.getParameter("ten") %><br>
+                            Người dùng: ${param.ten}
+                            </body>
+                            </html>
+                            
+                            
