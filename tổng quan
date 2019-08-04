@@ -1,0 +1,5 @@
+========================cấu trúc EL============
+1- ${ biểu thức} -> để truy cuxuaats biến đơn biên mảng list map javabeans......nhưng các thành phần này phải được thiết lặp thuôc tính của
+ các application, sesion, request, pagecontent
+2- vd : jsp : 3+8 =<%=3+8%>
+        el : 3+8 =${3+8}
